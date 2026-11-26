@@ -1,0 +1,5 @@
+﻿sample_id,fixed acidity,volatile acidity,citric acid,residual sugar,chlorides,free sulfur dioxide,total sulfur dioxide,density,pH,sulphates,alcohol,score_modelo_alta_qualidade,threshold_aplicado,target_previsto,classificacao_prevista
+DEMO_ABAIXO_050,6.7,0.16,0.64,2.1,0.059000000000000004,24.0,52.0,0.9949399999999999,3.34,0.71,11.2,0.44187538571477725,0.6,0,Baixa/Média qualidade
+DEMO_ENTRE_050_060,10.1,0.27,0.54,2.3,0.065,7.0,26.0,0.99531,3.17,0.53,12.5,0.5308508003224724,0.6,0,Baixa/Média qualidade
+DEMO_ENTRE_060_070,10.3,0.32,0.45,6.4,0.073,5.0,13.0,0.9976,3.23,0.82,12.6,0.6279000908929382,0.6,1,Alta qualidade
+DEMO_A_PARTIR_070,8.7,0.33,0.38,3.3,0.063,10.0,19.0,0.9946799999999999,3.3,0.73,12.0,0.7806470467129979,0.6,1,Alta qualidade
