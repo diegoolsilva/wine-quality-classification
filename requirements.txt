@@ -1,12 +1,8 @@
-# Dependências utilizadas no projeto Wine Quality Classification
-# Versões registradas no ambiente virtual do projeto.
-
 numpy==2.5.5
 pandas==3.1.1
 scipy==1.18.1
 scikit-learn==1.9.1
 matplotlib==3.11.2
 seaborn==0.13.2
-statsmodels==0.15.0
 pytest==9.2.0
 ipykernel==7.4.0

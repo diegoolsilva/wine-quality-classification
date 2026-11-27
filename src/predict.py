@@ -1,7 +1,12 @@
 """Gera previsões de qualidade de vinhos a partir de um arquivo CSV.
 
 Execute a partir da raiz do projeto:
+    python -m src.predict --input data/examples/novos_vinhos_exemplo.csv
+
+Para informar manualmente outro threshold:
     python -m src.predict --input data/examples/novos_vinhos_exemplo.csv --threshold 0.50
+
+Quando --threshold não é informado, o script usa o valor recomendado salvo no Pickle.
 
 ATENÇÃO: carregue somente arquivos pickle criados por você e de origem confiável.
 """
@@ -9,6 +14,7 @@ ATENÇÃO: carregue somente arquivos pickle criados por você e de origem confi�
 from __future__ import annotations
 
 import argparse
+import math
 import pickle
 from pathlib import Path
 
@@ -20,7 +26,6 @@ from src.features import MODEL_FEATURES, RAW_FEATURES, add_domain_features
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MODEL_PATH = PROJECT_ROOT / "models" / "wine_quality_model.pkl"
 DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "results" / "predictions" / "predictions.csv"
-ALLOWED_THRESHOLDS = (0.50, 0.60, 0.70)
 
 
 def load_model_bundle(model_path: Path) -> dict:
@@ -49,9 +54,11 @@ def load_model_bundle(model_path: Path) -> dict:
             "atual de src/features.py. Verifique se os arquivos pertencem à mesma versão."
         )
 
-    if model_bundle["model_feature_columns"] != MODEL_FEATURES:
+    supported_feature_sets = (RAW_FEATURES, MODEL_FEATURES)
+    if model_bundle["model_feature_columns"] not in supported_feature_sets:
         raise ValueError(
-            "As features do modelo não correspondem à versão atual de src/features.py."
+            "As features registradas no modelo não correspondem aos conjuntos "
+            "suportados por src/features.py (11 originais ou 13 com Feature Engineering)."
         )
 
     return model_bundle
@@ -104,10 +111,11 @@ def predict_dataframe(
     threshold: float,
 ) -> pd.DataFrame:
     """Gera score e classe prevista para cada linha recebida."""
-    if threshold not in ALLOWED_THRESHOLDS:
-        raise ValueError(
-            f"Threshold inválido. Utilize um dos cenários avaliados: {ALLOWED_THRESHOLDS}."
-        )
+    if isinstance(threshold, bool) or not isinstance(threshold, (int, float)):
+        raise ValueError("Threshold inválido. Informe um número entre 0 e 1, inclusive.")
+    if not math.isfinite(float(threshold)) or not 0 <= float(threshold) <= 1:
+        raise ValueError("Threshold inválido. Informe um número entre 0 e 1, inclusive.")
+    threshold = float(threshold)
 
     model_features, sample_ids = prepare_input_data(data)
     expected_columns = model_bundle["model_feature_columns"]
@@ -144,10 +152,10 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "--threshold",
-        required=True,
+        required=False,
         type=float,
-        choices=ALLOWED_THRESHOLDS,
-        help="Cenário avaliado: 0.50 (padrão), 0.60 (intermediário) ou 0.70 (conservador).",
+        default=None,
+        help="Threshold entre 0 e 1. Se omitido, utiliza o threshold recomendado salvo no Pickle.",
     )
     parser.add_argument(
         "--output",
@@ -164,6 +172,21 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+
+def resolve_threshold(user_threshold: float | None, model_bundle: dict) -> float:
+    """Usa o threshold informado pelo usuário ou a recomendação salva no modelo."""
+    if user_threshold is not None:
+        return user_threshold
+
+    recommended_threshold = model_bundle.get("recommended_threshold")
+    if recommended_threshold is None:
+        raise ValueError(
+            "O arquivo do modelo não contém um threshold recomendado. "
+            "Informe --threshold explicitamente ou recrie o Pickle executando a seção 8 do notebook atualizado."
+        )
+    return recommended_threshold
+
+
 def main() -> None:
     args = parse_arguments()
 
@@ -172,7 +195,8 @@ def main() -> None:
 
     input_data = pd.read_csv(args.input)
     model_bundle = load_model_bundle(args.model)
-    predictions = predict_dataframe(input_data, model_bundle, args.threshold)
+    effective_threshold = resolve_threshold(args.threshold, model_bundle)
+    predictions = predict_dataframe(input_data, model_bundle, effective_threshold)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     predictions.to_csv(args.output, index=False, encoding="utf-8-sig")
@@ -180,7 +204,7 @@ def main() -> None:
     positive_count = int(predictions["target_previsto"].sum())
     print(f"Amostras processadas: {len(predictions)}")
     print(f"Classificadas como alta qualidade: {positive_count}")
-    print(f"Threshold aplicado: {args.threshold:.2f}")
+    print(f"Threshold aplicado: {effective_threshold:.2f}")
     print(f"Arquivo de resultados salvo em: {args.output.resolve()}")
 
 

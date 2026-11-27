@@ -1,0 +1,4 @@
+﻿Modelo,Melhor AP na validação cruzada,Desvio-padrão da AP,Melhores parâmetros
+Random Forest,0.6179182392638414,0.0628052329295114,"{'class_weight': 'balanced_subsample', 'max_depth': 5, 'min_samples_leaf': 3, 'n_estimators': 200}"
+SVM RBF,0.6032506361733013,0.0623866743862766,"{'model__C': 1.0, 'model__gamma': 0.1}"
+Regressão Logística,0.5669388951018259,0.07712987299826406,"{'model__C': 0.1, 'model__class_weight': 'balanced'}"

@@ -1,5 +1,5 @@
-﻿sample_id,Score do modelo,Classe — Padrão (0.50),Classe — Intermediário (0.60),Classe — Conservador (0.70)
-DEMO_ABAIXO_050,0.44187538571477725,Baixa/Média qualidade,Baixa/Média qualidade,Baixa/Média qualidade
-DEMO_ENTRE_050_060,0.5308508003224724,Alta qualidade,Baixa/Média qualidade,Baixa/Média qualidade
-DEMO_ENTRE_060_070,0.6279000908929382,Alta qualidade,Alta qualidade,Baixa/Média qualidade
-DEMO_A_PARTIR_070,0.7806470467129979,Alta qualidade,Alta qualidade,Alta qualidade
+﻿sample_id,Score do modelo,Recomendado (F2) (0.39),Padrão (0.50),Intermediário (0.60),Conservador (0.70)
+DEMO_ABAIXO_050,0.410368924121106,Alta qualidade,Baixa/Média qualidade,Baixa/Média qualidade,Baixa/Média qualidade
+DEMO_ENTRE_050_060,0.5564050102516578,Alta qualidade,Alta qualidade,Baixa/Média qualidade,Baixa/Média qualidade
+DEMO_ENTRE_060_070,0.6473709534883312,Alta qualidade,Alta qualidade,Alta qualidade,Baixa/Média qualidade
+DEMO_A_PARTIR_070,0.7412384774769452,Alta qualidade,Alta qualidade,Alta qualidade,Alta qualidade

@@ -74,6 +74,15 @@ def add_domain_features(data: pd.DataFrame) -> pd.DataFrame:
             "volatile_to_fixed_acidity com denominador zero."
         )
 
+    inconsistent_so2 = result["free sulfur dioxide"] > result["total sulfur dioxide"]
+    if inconsistent_so2.any():
+        invalid_rows = (inconsistent_so2[inconsistent_so2].index + 1).tolist()
+        raise ValueError(
+            "Há amostras em que 'free sulfur dioxide' é maior que "
+            "'total sulfur dioxide'. Verifique as linhas: "
+            + ", ".join(map(str, invalid_rows))
+        )
+
     result["free_sulfur_ratio"] = (
         result["free sulfur dioxide"] / result["total sulfur dioxide"]
     )

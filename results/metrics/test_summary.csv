@@ -1,0 +1,2 @@
+﻿Modelo,Average Precision (teste),ROC-AUC (teste),Observações no teste,Positivas no teste,Prevalência positiva no teste
+Random Forest,0.6122445740720724,0.884494664155681,204,27,0.1323529411764706

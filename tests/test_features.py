@@ -44,3 +44,12 @@ def test_add_domain_features_rejects_zero_denominator():
 
     with pytest.raises(ValueError, match="total sulfur dioxide.*zero|denominador zero"):
         add_domain_features(data)
+
+
+def test_add_domain_features_rejects_free_sulfur_above_total():
+    data = sample_input()
+    data.loc[0, "free sulfur dioxide"] = 50.0
+    data.loc[0, "total sulfur dioxide"] = 40.0
+
+    with pytest.raises(ValueError, match="free sulfur dioxide.*maior que.*total sulfur dioxide"):
+        add_domain_features(data)

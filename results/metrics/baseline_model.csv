@@ -1,0 +1,2 @@
+﻿Modelo,Average Precision média,AP desvio-padrão,ROC-AUC média
+Dummy (classe mais frequente),0.1351,0.0003,0.5
